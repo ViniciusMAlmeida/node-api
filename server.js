@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const requireDir = require('require-dir')
 const routes = require('./src/routes')
+const mongoConfig = require('./mongoConfig')
 
 // Iniciando o App
 const app = express()
@@ -12,11 +13,7 @@ app.use(express.json())
 app.use(cors())
 
 //Iniciando o DB
-mongoose.connect("mongodb://localhost:27017/nodeapi", {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false
-})
+mongoose.connect("mongodb://localhost:27017/nodeapi", mongoConfig)
 requireDir('./src/models')
 
 // Rotas

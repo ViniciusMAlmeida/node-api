@@ -19,6 +19,6 @@ requireDir('./src/models')
 // Rotas
 app.use('/api', routes)
 
-app.listen(3001, () => {
+app.listen(porta, () => {
     console.log(`Servidor executando na porta ${porta}`)
 })

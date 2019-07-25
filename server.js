@@ -1,4 +1,4 @@
-const porta = 3001
+require('dotenv').config()
 
 const express = require('express')
 const mongoose = require('mongoose')
@@ -13,12 +13,12 @@ app.use(express.json())
 app.use(cors())
 
 //Iniciando o DB
-mongoose.connect("mongodb://localhost:27017/nodeapi", mongoConfig)
+mongoose.connect(process.env.DB_NAME, mongoConfig)
 requireDir('./src/models')
 
 // Rotas
 app.use('/api', routes)
 
-app.listen(porta, () => {
-    console.log(`Servidor executando na porta ${porta}`)
+app.listen(process.env.PORTA, () => {
+    console.log(`Servidor executando na porta ${process.env.PORTA}`)
 })

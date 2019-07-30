@@ -1,4 +1,6 @@
-const User = require("../models/User")
+const User = require('../models/User')
+const Token = require('../models/Token')
+const jwt = require("jsonwebtoken")
 
 module.exports = {
     async register(req, res) {
@@ -31,11 +33,26 @@ module.exports = {
                 return res.status(400).json({ error: "Invalid password" })
             }
 
+            const tokenModel = await Token.findOne({ email })
+            console.log(tokenModel)
+            if (tokenModel && tokenModel.isValid(tokenModel.token)) {
+                return res.json({
+                    user,
+                    token: tokenModel.token
+                })
+            }
+
+            const token = user.generateToken()
+            const iat = new Date(jwt.decode(token).iat * 1000)
+            const exp = new Date(jwt.decode(token).exp * 1000)
+            await Token.create({ token: token, name: user.name, email: user.email, datger: iat, datexp: exp })
+
             return res.json({
                 user,
-                token: user.generateToken()
+                token: token
             })
         } catch (err) {
+            console.log(err)
             return res.status(400).json({ error: "User authentication failed" })
         }
     },

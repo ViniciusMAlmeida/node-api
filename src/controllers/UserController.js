@@ -34,8 +34,7 @@ module.exports = {
             }
 
             const tokenModel = await Token.findOne({ email })
-            console.log(tokenModel)
-            if (tokenModel && tokenModel.isValid(tokenModel.token)) {
+            if (tokenModel && tokenModel.isValid(tokenModel.token || '')) {
                 return res.json({
                     user,
                     token: tokenModel.token
@@ -45,6 +44,7 @@ module.exports = {
             const token = user.generateToken()
             const iat = new Date(jwt.decode(token).iat * 1000)
             const exp = new Date(jwt.decode(token).exp * 1000)
+            await Token.findOneAndRemove({ email })
             await Token.create({ token: token, name: user.name, email: user.email, datger: iat, datexp: exp })
 
             return res.json({
@@ -52,7 +52,6 @@ module.exports = {
                 token: token
             })
         } catch (err) {
-            console.log(err)
             return res.status(400).json({ error: "User authentication failed" })
         }
     },

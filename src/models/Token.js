@@ -27,17 +27,15 @@ const TokenSchema = new mongoose.Schema({
 })
 
 TokenSchema.methods = {
-    exists(user) {
-        const email = user.email;
-        const Token = this.findOne({ email })
-        console.log(Token)
-        if (Token) {
-            return this.token
-        }
-        return false
-    },
     isValid(token) {
-        return jwt.verify(token, process.env.JWT_KEY)
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_KEY)
+            if (decoded) {
+                return true
+            }
+        } catch (error) {
+            return false
+        }
     }
 }
 

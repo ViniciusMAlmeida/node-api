@@ -34,8 +34,8 @@ UserSchema.methods = {
     },
 
     generateToken() {
-        return jwt.sign({ id: this.id, iat: Math.floor(Date.now() / 1000) - 10800 }, process.env.JWT_KEY, {
-            expiresIn: 86400
+        return jwt.sign({ id: this.id }, process.env.JWT_KEY, {
+            expiresIn: 3600
         })
     }
 }
